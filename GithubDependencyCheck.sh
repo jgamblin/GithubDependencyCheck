@@ -12,14 +12,14 @@ node=$(curl -u $username:$passwordtoken -s -o /dev/null -I -w "%{http_code}" htt
   if [ $node -eq "200" ]; then
     printf "Testing %s. \n" "$repo"
     curl -s -u $username:$passwordtoken https://raw.githubusercontent.com/$org/$repo/$defaultbranch/package.json > package.json
-    dependency-check --scan ./package.json --project "$repo" --format VULN --out $repo.html
+    dependency-check --scan ./package.json --project "$repo" --format HTML --out $repo.html
     #dependency-check --scan ./package.json --project "$repo" --format JSON--out $repo.json 
   else
     ruby=$(curl -u $username:$passwordtoken -s -o /dev/null -I -w "%{http_code}" https://raw.githubusercontent.com/$org/$repo/$defaultbranch/Gemfile.lock)
     if [ $ruby -eq "200" ]; then
     printf "Testing %s. \n" "$repo"
     curl -s -u $username:$passwordtoken https://raw.githubusercontent.com/$org/$repo/$defaultbranch/Gemfile.lock > Gemfile.lock
-    dependency-check --scan ./Gemfile.lock --project "$repo" --format VULN --out $repo.html  
+    dependency-check --scan ./Gemfile.lock --project "$repo" --format HTML --out $repo.html  
     #dependency-check --scan ./Gemfile.lock --project "$repo" --format JSON --out $repo.json
   fi
   printf "%s is not a Node or Ruby Project. Unable to run dependency-check. \n\n" "$repo"
